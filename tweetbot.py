@@ -44,13 +44,14 @@ while True:
     for media in medias:
         if not moustached:
             # downloading media
-            downloaded_filename = str(counter)+".jpg"
-            os.system("curl "+media[1][0]+" -o "+downloaded_filename)
+            downloaded_filename = str(media[0])+".jpg"
+            os.system("curl "+media[2][0]+" -o "+downloaded_filename)
             # moustaching it
             result = elmustachio.goMoustachioGo(downloaded_filename)
             if result != None:
                 # moustaching succeeded
                 api.update_with_media(result, "", media[0])
+                moustached = True
             else:
                 os.system("rm "+ downloaded_filename)
 
