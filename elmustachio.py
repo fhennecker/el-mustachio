@@ -61,5 +61,6 @@ def goMoustachioGo(filename):
             (head, tail) = os.path.split(filename)
             result = os.path.join(head, 'elmustachios-'+tail)
             image.save(result)
+            return result
         else:
             return None

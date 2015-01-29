@@ -50,6 +50,7 @@ while True:
             result = elmustachio.goMoustachioGo(downloaded_filename)
             if result != None:
                 # moustaching succeeded
+                print result
                 api.update_with_media(result, "", media[0])
                 moustached = True
             else:
