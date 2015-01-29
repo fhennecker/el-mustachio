@@ -33,7 +33,10 @@ while True:
         if media:
             media = map(lambda x:x["media_url"], media)
             status_id = tweet.id
-            user = tweet.user.screen_name
+            if hasattr(tweet, 'retweeted_status'):
+                user = tweet.retweeted_status.author.screen_name
+            else:
+                user = tweet.author.screen_name
             safe = not tweet.possibly_sensitive
             if safe and not str(media) in open(mediasfile).read():
                 medias.append((status_id, safe, media, user))
@@ -52,7 +55,7 @@ while True:
             if result != None:
                 # moustaching succeeded
                 print result
-                api.update_with_media(result, "@"+media[3],  in_reply_to_status_id=str(media[0]))
+                api.update_with_media(result, "Muchos Mustachios! @"+media[3],  in_reply_to_status_id=str(media[0]))
                 moustached = True
             else:
                 os.system("rm "+ downloaded_filename)
