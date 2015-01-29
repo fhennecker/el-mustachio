@@ -33,9 +33,10 @@ while True:
         if media:
             media = map(lambda x:x["media_url"], media)
             status_id = tweet.id
+            user = tweet.user.screen_name
             safe = not tweet.possibly_sensitive
             if safe and not str(media) in open(mediasfile).read():
-                medias.append((status_id, safe, media))
+                medias.append((status_id, safe, media, user))
                 with open(mediasfile, "a") as f:
                     f.write(str(media))
                     f.write("\n")
@@ -51,7 +52,7 @@ while True:
             if result != None:
                 # moustaching succeeded
                 print result
-                api.update_with_media(result, "@"+media[2], media[0])
+                api.update_with_media(result, "@"+media[3], media[0])
                 moustached = True
             else:
                 os.system("rm "+ downloaded_filename)
