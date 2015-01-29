@@ -1,6 +1,7 @@
 import tweepy, time, sys
 from twitter import OAuth, Twitter
 import os.path
+import elmustachio
 
 CONSUMER_KEY = 'hXNJGzk3drcOhgonq3zsDZDSL'
 CONSUMER_SECRET = 'kup9SzdPtzzghcEMq4D1kd2npmLRn3h0lNMOyn3FgTOWzjQeHv'
@@ -14,44 +15,46 @@ autht = OAuth(ACCESS_KEY, ACCESS_SECRET, CONSUMER_KEY, CONSUMER_SECRET)
 t = Twitter(auth=autht)
 mediasfile = "medias.txt"
 if not os.path.isfile(mediasfile):
-	f = open(mediasfile, "w")
-	f.close()
+    f = open(mediasfile, "w")
+    f.close()
+
+elmustachio.init()
 
 while True:
-	# follow every follower
-	for follower in tweepy.Cursor(api.followers).items():
-		follower.follow()
+    # follow every follower
+    for follower in tweepy.Cursor(api.followers).items():
+        follower.follow()
 
-	# pick random selfie tweet
-	q = "selfie"
-	tweets = t.search.tweets(q=q, filter="images")
-	medias = []
+    # pick random selfie tweet
+    q = "selfie"
+    tweets = t.search.tweets(q=q, filter="images")
+    medias = []
 
-	for tweet in tweets["statuses"]:
-		media = tweet["entities"].get("media", False)
-		if media:
-			media = map(lambda x:x["media_url"], media)
-			status_id = tweet["id"]
-			if not str(media) in open(mediasfile).read():
-				medias.append((status_id, media))
-				with open(mediasfile, "a") as f:
-					f.write(str(media))
-					f.write("\n")
+    for tweet in tweets["statuses"]:
+        media = tweet["entities"].get("media", False)
+        if media:
+            media = map(lambda x:x["media_url"], media)
+            status_id = tweet["id"]
+            if not str(media) in open(mediasfile).read():
+                medias.append((status_id, media))
+                with open(mediasfile, "a") as f:
+                    f.write(str(media))
+                    f.write("\n")
 
     counter = 0
     moustached = False
-	for media in medias:
+    for media in medias:
         if not moustached:
             # downloading media
             downloaded_filename = str(counter)+".jpg"
-            os.system("curl "+media[1]+" > "+downloaded_filename)
+            os.system("curl "+media[1][0]+" -o "+downloaded_filename)
             # moustaching it
-    		os.system("python elmustachios-cli.py "+ downloaded_filename)
-            if os.path.isfile("elmustachios-"+downloaded_filename):
+            result = elmustachio.goMoustachioGo(downloaded_filename)
+            if result != None:
                 # moustaching succeeded
-                #api.update_with_media("elmustachios-"+downloaded_filename, "", media[0])
+                api.update_with_media(result, "", media[0])
             else:
                 os.system("rm "+ downloaded_filename)
 
-	# wait for 10 minutes
-	time.sleep(10*60)
+    # wait for 10 minutes
+    time.sleep(10*60)
