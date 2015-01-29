@@ -37,11 +37,20 @@ while True:
 					f.write(str(media))
 					f.write("\n")
 
-
-	# moustache said selfie
-
-	# post moustached selfie
-	#api.update_with_media(filename, "", status_id, )
+    counter = 0
+    moustached = False
+	for media in medias:
+        if not moustached:
+            # downloading media
+            downloaded_filename = str(counter)+".jpg"
+            os.system("curl "+media[1]+" > "+downloaded_filename)
+            # moustaching it
+    		os.system("python elmustachios-cli.py "+ downloaded_filename)
+            if os.path.isfile("elmustachios-"+downloaded_filename):
+                # moustaching succeeded
+                #api.update_with_media("elmustachios-"+downloaded_filename, "", media[0])
+            else:
+                os.system("rm "+ downloaded_filename)
 
 	# wait for 10 minutes
 	time.sleep(10*60)
