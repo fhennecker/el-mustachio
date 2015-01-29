@@ -1,5 +1,5 @@
 import tweepy, time, sys
-from twitter import OAuth, Twitter
+#from twitter import OAuth, Twitter
 import os.path
 import elmustachio
 
@@ -11,8 +11,6 @@ auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 api = tweepy.API(auth)
 
-autht = OAuth(ACCESS_KEY, ACCESS_SECRET, CONSUMER_KEY, CONSUMER_SECRET)
-t = Twitter(auth=autht)
 mediasfile = "medias.txt"
 if not os.path.isfile(mediasfile):
     f = open(mediasfile, "w")
@@ -22,26 +20,26 @@ elmustachio.init()
 
 while True:
     # follow every follower
-    for follower in tweepy.Cursor(api.followers).items():
-        follower.follow()
+    # for follower in tweepy.Cursor(api.followers).items():
+    #    follower.follow()
 
     # pick random selfie tweet
     q = "selfie"
-    tweets = t.search.tweets(q=q, filter="images")
+    tweets = api.search(q=q, count=10, filter="images")
     medias = []
 
-    for tweet in tweets["statuses"]:
-        media = tweet["entities"].get("media", False)
+    for tweet in tweets:
+        media = tweet.entities.get("media", False)
         if media:
             media = map(lambda x:x["media_url"], media)
-            status_id = tweet["id"]
-            if not str(media) in open(mediasfile).read():
-                medias.append((status_id, media))
+            status_id = tweet.id
+            safe = not tweet.possibly_sensitive
+            if safe and not str(media) in open(mediasfile).read():
+                medias.append((status_id, safe, media))
                 with open(mediasfile, "a") as f:
                     f.write(str(media))
                     f.write("\n")
-
-    counter = 0
+    print medias
     moustached = False
     for media in medias:
         if not moustached:
