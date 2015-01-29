@@ -51,7 +51,7 @@ while True:
             if result != None:
                 # moustaching succeeded
                 print result
-                api.update_with_media(result, "", media[0])
+                api.update_with_media(result, "@"+media[2], media[0])
                 moustached = True
             else:
                 os.system("rm "+ downloaded_filename)
