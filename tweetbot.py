@@ -18,7 +18,7 @@ while True:
 	# moustache said selfie
 
 	# post moustached selfie
-	#api.update_status(status='The world needs more moustaches')
+	#api.update_with_media(filename, "", status_id, )
 
 	# wait for 10 minutes
 	time.sleep(10*60)
