@@ -17,8 +17,8 @@ if not os.path.isfile(mediasfile):
 
 while True:
     # follow every follower
-    for follower in tweepy.Cursor(api.followers).items():
-        follower.follow()
+    #for follower in tweepy.Cursor(api.followers).items():
+    #    follower.follow()
 
     # pick random selfie tweet
     q = "selfie"
