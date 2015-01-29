@@ -12,11 +12,6 @@ auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 api = tweepy.API(auth)
 
-mediasfile = "medias.txt"
-if not os.path.isfile(mediasfile):
-    f = open(mediasfile, "w")
-    f.close()
-
 elmustachio.init()
 
 if len(sys.argv) > 1:
@@ -63,17 +58,14 @@ else:
                 else:
                     user = tweet.author.screen_name
                 safe = not tweet.possibly_sensitive
-                if safe and not str(media) in open(mediasfile).read():
+                if safe :
                     medias.append((status_id, safe, media, user))
-                    with open(mediasfile, "a") as f:
-                        f.write(str(media))
-                        f.write("\n")
         print medias
         moustached = False
         for media in medias:
             if not moustached:
                 # downloading media
-                downloaded_filename = str(media[0])+".jpg"
+                downloaded_filename = 'img/'+str(media[0])+".jpg"
                 os.system("curl "+media[2][0]+" -o "+downloaded_filename)
                 # moustaching it
                 result = elmustachio.goMoustachioGo(downloaded_filename)
