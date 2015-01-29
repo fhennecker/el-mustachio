@@ -1,4 +1,5 @@
 import sys
+import os
 import math
 from operator import itemgetter
 import numpy as np
@@ -35,10 +36,11 @@ else:
             eyes = eye_cascade.detectMultiScale(roi_gray)
             candidates = []
             for (ex, ey, ew, eh) in eyes:
-                score = (ew*eh - (w*h*0.05))**2
-                print(str(ew*eh) + ' vs ' + str(w*h*0.05) + ': ' + str(score))
+                score = (ew*eh - (w*h*0.058))**2
+                print(str(ew*eh) + ' vs ' + str(w*h*0.058) + ': ' + str(score))
                 candidates.append((score, x+ex+ew/2, y+ey+eh/2))
             candidates = sorted(candidates, key=itemgetter(0))
+            print candidates
             if len(candidates) >= 2:
                 p1 = (candidates[0][1], candidates[0][2])
                 p2 = (candidates[1][1], candidates[1][2])
@@ -59,7 +61,8 @@ else:
                 cv2.line(cvimg, p3, p2, (0, 255, 0), 5)
     if worked:
         print('ElMustachios!')
-        cv2.imwrite('debug-'+sys.argv[1], cvimg)
-        image.save('elmustachios-'+sys.argv[1]);
+        (head, tail) = os.path.split(sys.argv[1])
+        cv2.imwrite(os.path.join(head, 'debug-'+tail), cvimg)
+        image.save(os.path.join(head, 'elmustachios-'+tail));
     else:
         print('Too ugly')
