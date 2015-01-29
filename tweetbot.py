@@ -44,8 +44,8 @@ else:
         #    follower.follow()
 
         # pick random selfie tweet
-        q = "selfie"
-        tweets = api.search(q=q, count=20, filter="images")
+        q = "selfie -justin -ellen -kanye -boobs -sex -nsfw -pussy -porn -sexy -fap"
+        tweets = api.search(q=q, count=20, result_type="recent", filter="images")
         medias = []
 
         for tweet in tweets:
