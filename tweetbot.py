@@ -7,9 +7,18 @@ ACCESS_SECRET = 'ePy8t3F683CfPEmBacQEBU1JARy5oX2SaZPDACoBqMNdZ'
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 api = tweepy.API(auth)
- 
-#api.update_status(status='The world needs more moustaches')
 
-public_tweets = api.home_timeline()
-for follower in tweepy.Cursor(api.followers).items():
-    follower.follow()
+while True:
+	# follow every follower
+	for follower in tweepy.Cursor(api.followers).items():
+	    follower.follow()
+
+	# pick random selfie tweet
+
+	# moustache said selfie
+
+	# post moustached selfie
+	#api.update_status(status='The world needs more moustaches')
+
+	# wait for 10 minutes
+	time.sleep(10*60)
