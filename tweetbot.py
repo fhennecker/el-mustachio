@@ -19,6 +19,8 @@ blacklist_cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND 
 if blacklist_cursor.fetchone() == None:
     blacklist_cursor.execute("CREATE TABLE blacklist (id UNISGNED BIG INT PRIMARY KEY ASC);")
 
+user_blacklist = ["SteveK_UK", "PantyHoseMilfs", "Bitch2Cuck"]
+
 elmustachio.init()
 
 if len(sys.argv) > 1:
@@ -56,7 +58,7 @@ else:
         #    follower.follow()
 
         # pick random selfie tweet
-        q = "selfie -justin -ellen -kanye -boobs -sex -nsfw -pussy -porn -sexy -fap"
+        q = "selfie -justin -bieber -ellen -kanye -boobs -sex -nsfw -pussy -porn -sexy -fap"
         tweets = api.search(q=q, count=20, result_type="recent", filter="images")
         medias = []
 
@@ -72,7 +74,7 @@ else:
                     status_id = tweet.id
                 safe = not tweet.possibly_sensitive
                 blacklist_cursor.execute("SELECT id FROM blacklist WHERE id=?;", (status_id,))
-                if safe and blacklist_cursor.fetchone() == None:
+                if safe and user not in user_blacklist and blacklist_cursor.fetchone() == None:
                     medias.append((status_id, safe, media, user))
         print medias
         moustached = False
@@ -86,7 +88,7 @@ else:
                 if result != None:
                     # moustaching succeeded
                     print result
-                    #api.update_with_media(result, "Muchos Mustachios! @"+media[3],  in_reply_to_status_id=str(media[0]))
+                    api.update_with_media(result, "Muchos Mustachios! @"+media[3],  in_reply_to_status_id=str(media[0]))
                     moustached = True
                     blacklist_cursor.execute("INSERT INTO blacklist VALUES (?);", (media[0],))
                     blacklist_db.commit()
