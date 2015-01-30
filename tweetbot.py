@@ -64,11 +64,12 @@ else:
             media = tweet.entities.get("media", False)
             if media:
                 media = map(lambda x:x["media_url"], media)
-                status_id = tweet.id
                 if hasattr(tweet, 'retweeted_status'):
                     user = tweet.retweeted_status.author.screen_name
+                    status_id = tweet.retweeted_status.id
                 else:
                     user = tweet.author.screen_name
+                    status_id = tweet.id
                 safe = not tweet.possibly_sensitive
                 blacklist_cursor.execute("SELECT id FROM blacklist WHERE id=?;", (status_id,))
                 if safe and blacklist_cursor.fetchone() == None:
