@@ -16,7 +16,7 @@ elmustachio.init()
 
 if len(sys.argv) > 1:
     url = sys.argv[1]
-    id_re = re.compile(".*/status/([0-9]+)/.*")
+    id_re = re.compile(".*/status/([0-9]+).*")
     tweet_id = id_re.match(url).groups()[0]
     tweet = api.statuses_lookup([tweet_id])[0]
     media = tweet.entities.get("media", False)
@@ -35,6 +35,10 @@ if len(sys.argv) > 1:
             # moustaching succeeded
             print result
             api.update_with_media(result, "Muchos Mustachios! @"+user,  in_reply_to_status_id=str(status_id))
+        else:
+            print('El Moustachio failed :(')
+    else:
+        print('No picture found.')
 
 else:
 
