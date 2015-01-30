@@ -72,7 +72,7 @@ else:
                 if result != None:
                     # moustaching succeeded
                     print result
-                    api.update_with_media(result, "Muchos Mustachios! @"+media[3],  in_reply_to_status_id=str(media[0]))
+                    #api.update_with_media(result, "Muchos Mustachios! @"+media[3],  in_reply_to_status_id=str(media[0]))
                     moustached = True
                 else:
                     os.system("rm "+ downloaded_filename)
