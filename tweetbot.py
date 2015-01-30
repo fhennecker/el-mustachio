@@ -3,6 +3,7 @@ import tweepy, time, sys
 import os.path
 import elmustachio
 import re
+import sqlite3
 
 CONSUMER_KEY = 'hXNJGzk3drcOhgonq3zsDZDSL'
 CONSUMER_SECRET = 'kup9SzdPtzzghcEMq4D1kd2npmLRn3h0lNMOyn3FgTOWzjQeHv'
@@ -11,6 +12,12 @@ ACCESS_SECRET = 'ePy8t3F683CfPEmBacQEBU1JARy5oX2SaZPDACoBqMNdZ'
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 api = tweepy.API(auth)
+
+blacklist_db = sqlite3.connect('blacklist.db')
+blacklist_cursor = blacklist_db.cursor()
+blacklist_cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='blacklist';")
+if blacklist_cursor.fetchone() == None:
+    blacklist_cursor.execute("CREATE TABLE blacklist (id UNISGNED BIG INT PRIMARY KEY ASC);")
 
 elmustachio.init()
 
@@ -22,11 +29,12 @@ if len(sys.argv) > 1:
     media = tweet.entities.get("media", False)
     if media:
         media = map(lambda x:x["media_url"], media)
-        status_id = tweet.id
         if hasattr(tweet, 'retweeted_status'):
             user = tweet.retweeted_status.author.screen_name
+            status_id = tweet.retweeted_status.id
         else:
             user = tweet.author.screen_name
+            status_id = tweet.id
         downloaded_filename = str(status_id)+".jpg"
         os.system("curl "+media[0]+" -o "+downloaded_filename)
         # moustaching it
@@ -62,7 +70,8 @@ else:
                 else:
                     user = tweet.author.screen_name
                 safe = not tweet.possibly_sensitive
-                if safe :
+                blacklist_cursor.execute("SELECT id FROM blacklist WHERE id=?;", (status_id,))
+                if safe and blacklist_cursor.fetchone() == None:
                     medias.append((status_id, safe, media, user))
         print medias
         moustached = False
@@ -78,6 +87,8 @@ else:
                     print result
                     #api.update_with_media(result, "Muchos Mustachios! @"+media[3],  in_reply_to_status_id=str(media[0]))
                     moustached = True
+                    blacklist_cursor.execute("INSERT INTO blacklist VALUES (?);", (media[0],))
+                    blacklist_db.commit()
                 else:
                     os.system("rm "+ downloaded_filename)
 
