@@ -5,6 +5,13 @@ import elmustachio
 import re
 import sqlite3
 
+def nsfw_filter(s):
+    nsfw_words = ["justin", "bieber", "1d", "one direction", "5/5", "niall", "zain", "zayn", "nsfw", "porn", "nude", "sex", "boob", "pussy", "pussies", "dick", "cock", "bitch", "fuck", "sexy", "milf", "tits", "ass "]
+    for w in nsfw_words:
+        if w in s:
+            return True
+    return False
+
 CONSUMER_KEY = 'hXNJGzk3drcOhgonq3zsDZDSL'
 CONSUMER_SECRET = 'kup9SzdPtzzghcEMq4D1kd2npmLRn3h0lNMOyn3FgTOWzjQeHv'
 ACCESS_KEY = '3004088237-GzNZtNGxp2aHgIKWfdau1HZDr5QjxcIbJLUmRDv'
@@ -19,7 +26,7 @@ blacklist_cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND 
 if blacklist_cursor.fetchone() == None:
     blacklist_cursor.execute("CREATE TABLE blacklist (id UNISGNED BIG INT PRIMARY KEY ASC);")
 
-user_blacklist = ["SteveK_UK", "PantyHoseMilfs", "Bitch2Cuck"]
+user_blacklist = ["SteveK_UK", "PantyhoseMilfs", "Bitch2Cuck", "FuckWatchyou", "Selfies_Galore", "Selfie_it", "selfie0queen", "EsVirall", "sexy_selfie_xxx", "HottestExies"]
 
 elmustachio.init()
 
@@ -58,7 +65,7 @@ else:
         #    follower.follow()
 
         # pick random selfie tweet
-        q = "selfie -justin -bieber -ellen -kanye -boobs -sex -nsfw -pussy -porn -sexy -fap"
+        q = "selfie -justin -bieber -ellen -kanye -boobs -sex -nsfw -pussy -porn -sexy -fap -cock -dick -nude -fuck"
         tweets = api.search(q=q, count=20, result_type="recent", filter="images")
         medias = []
 
@@ -72,10 +79,10 @@ else:
                 else:
                     user = tweet.author.screen_name
                     status_id = tweet.id
-                safe = not tweet.possibly_sensitive
+                nsfw = tweet.possibly_sensitive or nsfw_filter(user.lower()) or nsfw_filter(tweet.text.lower())
                 blacklist_cursor.execute("SELECT id FROM blacklist WHERE id=?;", (status_id,))
-                if safe and user not in user_blacklist and blacklist_cursor.fetchone() == None:
-                    medias.append((status_id, safe, media, user))
+                if not nsfw and user not in user_blacklist and blacklist_cursor.fetchone() == None:
+                    medias.append((status_id, nsfw, media, user))
         print medias
         moustached = False
         for media in medias:

@@ -22,7 +22,9 @@ def matchRect(r1, r2):
 
 
 face_cascades = [cv2.CascadeClassifier('haarcascade_frontalface_alt.xml'),
-                cv2.CascadeClassifier('haarcascade_frontalface.xml')]
+                 cv2.CascadeClassifier('haarcascade_frontalface_alt2.xml'),
+                 cv2.CascadeClassifier('haarcascade_frontalface_alt_tree.xml'),
+                 cv2.CascadeClassifier('haarcascade_frontalface.xml')]
 eye_cascades = [cv2.CascadeClassifier('haarcascade_eye.xml'), 
                cv2.CascadeClassifier('haarcascade_eye_tree_eyeglasses.xml'),
                cv2.CascadeClassifier('haarcascade_lefteye_2splits.xml'),
