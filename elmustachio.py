@@ -84,11 +84,6 @@ def computeFaceGeometry(face, eye1, eye2):
     angle = math.atan(float(p_eye2[1] - p_eye1[1])/float(p_eye2[0] - p_eye1[0]))
     return (p_face, scale, angle)
 
-def pasteScaledRotatedObject(image, obj, pos, scale, angle):
-    transformed = obj.resize((int(obj.size[0]*scale), int(obj.size[1]*scale)), Image.BICUBIC).rotate(-angle*360/(2*math.pi), Image.BICUBIC, 1)
-    pos = (pos[0] - transformed.size[0]/2, pos[1] - transformed.size[1]/2)
-    image.paste(transformed, box=pos, mask=transformed)
-
 def goMustachioGo(filename):
     cvimg = cv2.imread(filename)
     image = Image.open(filename)
@@ -113,10 +108,14 @@ def goMustachioGo(filename):
                 (p_face, scale, angle) = computeFaceGeometry((x, y, w, h), candidates[0][1], candidates[1][1])
                 if abs(angle) > math.pi/4:
                     break;
-                mustache_pos = (int(p_face[0] - scale/4*math.sin(angle)), int(p_face[1] + scale/4*math.cos(angle)))
-                sombrero_pos = (int(p_face[0] + scale/1.5*math.sin(angle)), int(p_face[1] - scale/1.5*math.cos(angle)))
-                pasteScaledRotatedObject(image, mustache, mustache_pos, scale, angle)
-                pasteScaledRotatedObject(image, sombrero, sombrero_pos, scale, angle)
+                sm = scale/2/mustache.size[0]
+                m = mustache.resize((int(mustache.size[0]*sm), int(mustache.size[1]*sm)), Image.BICUBIC).rotate(-angle*360/(2*math.pi), Image.BICUBIC, 1)
+                pm = (int(p_face[0] - scale/4*math.sin(angle) - m.size[0]/2), int(p_face[1] + scale/4*math.cos(angle) - m.size[1]/2))
+                image.paste(m, box=pm, mask=m)
+                ss = scale*2/sombrero.size[0]
+                s = sombrero.resize((int(sombrero.size[0]*ss), int(sombrero.size[1]*ss)), Image.BICUBIC).rotate(-angle*360/(2*math.pi), Image.BICUBIC, 1)
+                ps = (int(p_face[0] + scale/1.5*math.sin(angle) - s.size[0]/2), int(p_face[1] - scale/1.5*math.cos(angle) - s.size[1]/2))
+                image.paste(s, box=ps, mask=s)
                 worked = True
         if worked:
             (head, tail) = os.path.split(filename)
