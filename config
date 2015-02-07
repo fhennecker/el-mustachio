@@ -1,0 +1,10 @@
+# Example configuration, replace with adapted values
+# Yes, those keys were revocked
+DB_NAME = blacklist.db
+CONSUMER_KEY = hXNJGzk3drcOhgonq3zsDZDSL
+CONSUMER_SECRET = kup9SzdPtzzghcEMq4D1kd2npmLRn3h0lNMOyn3FgTOWzjQeHv
+ACCESS_KEY = 3004088237-GzNZtNGxp2aHgIKWfdau1HZDr5QjxcIbJLUmRDv
+ACCESS_SECRET = ePy8t3F683CfPEmBacQEBU1JARy5oX2SaZPDACoBqMNdZ
+INTERVAL = 600
+NSFW_WORDS = "justin", "bieber", "1d", "one direction", "5/5", "niall", "zain", "zayn", "nsfw", "porn", "nude", "sex", "boob", "pussy", "pussies", "dick", "cock", "bitch", "fuck", "sexy", "milf", "tits", "ass "
+USER_BLACKLIST = "SteveK_UK", "PantyhoseMilfs", "Bitch2Cuck", "FuckWatchyou", "Selfies_Galore", "Selfie_it", "selfie0queen", "EsVirall", "sexy_selfie_xxx", "HottestExies"
